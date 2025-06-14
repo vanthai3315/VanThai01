@@ -1,0 +1,7 @@
+6
+apple 5
+lemon 7
+cherry 3
+date 12
+grape 10
+banana 8
