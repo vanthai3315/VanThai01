@@ -15,13 +15,18 @@ int randomInt(int minVal, int maxVal)
 string randomKey(int length)
 {
     string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    static random_device rd;
+    static mt19937 gen(rd());
+    uniform_int_distribution<> dist(0, chars.size() - 1);
+
     string key;
     for (int i = 0; i < length; i++)
     {
-        key += chars[rand() % chars.size()];
+        key += chars[dist(gen)];
     }
     return key;
 }
+
 
 // 1. Sinh dữ liệu random keys
 vector<pair<string, int>> generateRandomKeys(int n, int keyLength)
@@ -37,20 +42,20 @@ vector<pair<string, int>> generateRandomKeys(int n, int keyLength)
 }
 
 
-// 2. Sinh dữ liệu sequential keys: "key1", "key2", ...
-vector<pair<string, int>> generateSequentialKeys(int n)
+// 2. Sinh dữ liệu sequential keys: prefix + "1", prefix + "2", ...
+vector<pair<string, int>> generateSequentialKeys(int n, const string& prefix)
 {
     vector<pair<string, int>> data;
     for (int i = 1; i <= n; i++)
     {
-        string key = "key" + to_string(i);
+        string key = prefix + to_string(i);
         int value = randomInt(0, 1000);
         data.push_back({ key, value });
     }
     return data;
 }
 
-// 3. Sinh dữ liệu clustered keys: nhiều key cùng prefix, ví dụ prefix + số thứ tự
+// 3. Sinh dữ liệu clustered keys: chia thành nhiều cụm, mỗi key có dạng "prefix + số cụm + '_' + chỉ số trong cụm"
 vector<pair<string, int>> generateClusteredKeys(int n, int clusterSize, const string& prefix)
 {
     vector<pair<string, int>> data;
@@ -62,7 +67,7 @@ vector<pair<string, int>> generateClusteredKeys(int n, int clusterSize, const st
         for (int i = 0; i < clusterSize && (c * clusterSize + i) < n; i++)
         {
             // key dạng: prefix + cluster number + "_" + index in cluster
-            string key = prefix + to_string(c) + "_" + to_string(i);
+            string key = prefix + to_string(c + 1) + "_" + to_string(i + 1);
             int value = randomInt(0, 1000);
             data.push_back({ key, value });
         }

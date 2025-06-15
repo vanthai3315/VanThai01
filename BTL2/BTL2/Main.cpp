@@ -12,19 +12,20 @@
 
 void veMenu() {
     cout << "-------------------------Menu------------------------" << endl;
-	cout << "1. Input size of hash table" << endl;
-	cout << "2. Insert key-value pair or get from file" << endl;
-	cout << "3. Search key" << endl;
-	cout << "4. Remove key" << endl;
-	cout << "5. Load factor" << endl;
-	cout << "6. Collision count" << endl;
-	cout << "7. Count clusters" << endl;
-	cout << "8. Average cluster size" << endl;
-	cout << "9. Max cluster size" << endl;
-	cout << "10. Memory usage" << endl;
-	cout << "11. Average search time for inserted keys" << endl;
-	cout << "12. Average remove time for inserted keys" << endl;
-	cout << "13. Exit" << endl;
+	cout << "1. Print hash table" << endl;
+	cout << "2. Input size of hash table" << endl;
+	cout << "3. Insert key-value pair or get from file" << endl;
+	cout << "4. Search key" << endl;
+	cout << "5. Remove key" << endl;
+	cout << "6. Load factor" << endl;
+	cout << "7. Collision count" << endl;
+	cout << "8. Count clusters" << endl;
+	cout << "9. Average cluster size" << endl;
+	cout << "10. Max cluster size" << endl;
+	cout << "11. Memory usage" << endl;
+	cout << "12. Average search time for inserted keys" << endl;
+	cout << "13. Average remove time for inserted keys" << endl;
+	cout << "14. Exit" << endl;
 	cout << "-----------------------------------------------------" << endl;
 }
 
@@ -34,18 +35,23 @@ int main() {
 	int size = 0;
     Traditional_Hash tradiHash(0);
     Fibonacci_Hash fiboHash(0);
-	vector<pair<string, int>> kv;
+	vector<pair<string, int>> kv, temp;
 	while (true) {
 		system("cls");
-		cout << " ------ Table of Traditional Hash ------ " << endl;
-		tradiHash.print();
-		cout << " ------ Table of Fibonacci Hash ------ " << endl;
-		fiboHash.print();
 		veMenu();
 		cout << "Please enter your option: ";
 		cin >> option;
 		switch (option) {
-		case 1: {
+		case 1:
+		{
+			cout << " ------ Table of Traditional Hash ------ " << endl;
+			tradiHash.print();
+			cout << " ------ Table of Fibonacci Hash ------ " << endl;
+			fiboHash.print();
+			system("pause");
+			break;
+		}
+		case 2: {
 			cout << "Enter the size of the hash table: ";
 			cin >> size;
 			// Khởi tạo bảng băm với kích thước cho trước
@@ -55,7 +61,7 @@ int main() {
 			system("pause");
 			break;
 		}
-		case 2: {
+		case 3: {
 			cout << " ------------- menu --------------- " << endl;
 			cout << "1. Direct data entry" << endl;
 			cout << "2. Get data from file" << endl;
@@ -71,10 +77,10 @@ int main() {
 					break;
 				}
 				
-				cout << "Choose key type:\n";
 				cout << "1. Random\n";
 				cout << "2. Sequential\n";
 				cout << "3. Clustered\n";
+				cout << "Choose key type: ";
 
 				cin >> choice;
 
@@ -84,27 +90,30 @@ int main() {
 
 				switch (choice)
 				{
-				case 1: 
+				case 1:
 				{
-					kv = generateRandomKeys(n, randomInt(1, 30));
+					temp = generateRandomKeys(n, randomInt(1, 20));
+					kv.insert(kv.end(), temp.begin(), temp.end());
 					break;
 				}
 				case 2:
 				{
-					kv = generateSequentialKeys(n);
+					temp = generateSequentialKeys(n, "key");
+					kv.insert(kv.end(), temp.begin(), temp.end());
 					break;
 				}
 				case 3:
 				{
-					kv = generateClusteredKeys(n, 10, "key");
+					temp = generateClusteredKeys(n, 20, "key");
+					kv.insert(kv.end(), temp.begin(), temp.end());
 					break;
 				}
 				default:
 					break;
 				}
 
-				double time1 = measureExecutionTime(&Traditional_Hash::insert_n, &tradiHash, n, kv);
-				double time2 = measureExecutionTime(&Fibonacci_Hash::insert_n, &fiboHash, n, kv);
+				double time1 = measureExecutionTime(&Traditional_Hash::insert_n, &tradiHash, n, temp);
+				double time2 = measureExecutionTime(&Fibonacci_Hash::insert_n, &fiboHash, n, temp);
 
 				cout << "Traditional_Hash insertion time for " << n << " key-value pairs: " << time1 << " ms" << endl;
 				cout << "Fibonacci_Hash insertion time for " << n << " key-value pairs: " << time2 << " ms" << endl;
@@ -152,7 +161,7 @@ int main() {
 			}
 			break;
 		}
-		case 3: {
+		case 4: {
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
 				system("pause");
@@ -199,7 +208,7 @@ int main() {
 			break;
 		}
 
-		case 4: {
+		case 5: {
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
 				system("pause");
@@ -241,10 +250,26 @@ int main() {
 			}
 			cout << "Fibonacci_Hash remove time: " << time2 << " ms" << endl;
 
+			if (removed1 || removed2)
+			{
+				for (int i = 0; i < kv.size(); )
+				{
+					if (kv[i].first == key)
+					{
+						kv.erase(kv.begin() + i); // không tăng i vì phần tử tiếp theo đã dồn về
+					}
+					else
+					{
+						i++; // chỉ tăng i nếu không xóa
+					}
+				}
+			}
+
+
 			system("pause");
 			break;
 		}
-		case 5:
+		case 6:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -259,7 +284,7 @@ int main() {
 
 			break;
 		}
-		case 6:
+		case 7:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -274,7 +299,7 @@ int main() {
 			
 		}
 
-		case 7:
+		case 8:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -287,7 +312,7 @@ int main() {
 			system("pause");
 			break;
 		}
-		case 8:
+		case 9:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -300,7 +325,7 @@ int main() {
 			system("pause");
 			break;
 		}
-		case 9:
+		case 10:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -314,7 +339,7 @@ int main() {
 			system("pause");
 			break;
 		}
-		case 10:
+		case 11:
 		{
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
@@ -331,7 +356,7 @@ int main() {
 			system("pause");
 			break;
 		}
-		case 11: {
+		case 12: {
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
 				system("pause");
@@ -344,7 +369,7 @@ int main() {
 		}
 
 
-		case 12: {
+		case 13: {
 			if (size == 0) {
 				cout << "Please create a hash table first!" << endl;
 				system("pause");
@@ -352,13 +377,14 @@ int main() {
 			}
 			cout << "Average remove time in Traditional Hash: " << tradiHash.averageRemoveTime(kv) << " ms" << endl;
 			cout << "Average remove time in Fibonacci Hash: " << fiboHash.averageRemoveTime(kv) << " ms" << endl;
+			kv.clear();
 			system("pause");
 			break;
 		}
 
 
 
-		case 13: {
+		case 14: {
 			cout << "Exiting program..." << endl;
 			return 0;
 		}
