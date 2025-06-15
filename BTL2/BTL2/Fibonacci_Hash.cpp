@@ -104,6 +104,9 @@ bool Fibonacci_Hash::remove(const string& key) {
             // Đánh dấu là đã xóa nhưng không giải phóng để tránh phá vỡ chuỗi probing
             table[index].isOccupied = false;
             table[index].isDeleted = true;
+            if (getLoadFactor() <= 0.3 && size > initialSize) {
+                rehash_remove();
+            }
             return true;
         }
         else if (!table[index].isOccupied && !table[index].isDeleted) {
@@ -113,15 +116,14 @@ bool Fibonacci_Hash::remove(const string& key) {
 
         i++;
     }
-    if (getLoadFactor() <= 0.3 && size > initialSize) {
-        rehash_remove();
-    }
+    
     return false;
 }
 
 
 // Mở rộng bảng băm khi bảng đầy
 void Fibonacci_Hash::rehash_insert() {
+    collisionCount = 0;
     int oldSize = size; // Lưu kích thước bảng băm cũ
     size *= 2;          // Tăng gấp đôi kích thước bảng băm
     vector<Entry> oldTable = table; // Sao chép bảng băm cũ
@@ -138,6 +140,7 @@ void Fibonacci_Hash::rehash_insert() {
 
 // thu hẹp bảng lại để không tốn nhiều bộ nhớ của hệ thống
 void Fibonacci_Hash::rehash_remove() {
+    collisionCount = 0;
     int oldSize = size; // Lưu kích thước bảng băm cũ
     size /= 2;          // Giảm một nửa kích thước bảng băm
     vector<Entry> oldTable = table; // Sao chép bảng băm cũ

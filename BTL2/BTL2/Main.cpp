@@ -58,6 +58,7 @@ int main() {
 			tradiHash = Traditional_Hash(size);
 			fiboHash = Fibonacci_Hash(size);
 			cout << "Hash tables created with size " << size << endl;
+			kv.clear();
 			system("pause");
 			break;
 		}
@@ -104,7 +105,7 @@ int main() {
 				}
 				case 3:
 				{
-					temp = generateClusteredKeys(n, 20, "key");
+					temp = generateClusteredKeys(n, 100, "key");
 					kv.insert(kv.end(), temp.begin(), temp.end());
 					break;
 				}
